@@ -1,5 +1,4 @@
 from app.utils import extract
-
 class Review:
 
     review_schema = {
@@ -16,11 +15,10 @@ class Review:
         "purchase_date": ("span.user-post__published > time:nth-child(2)",'datetime'),
     }
 
-
-    def __init__(self, review_id, author, recomendation, stars, content, pros, cons, likes, dislikes, publish_date, purchase_date):
+    def __init__(self, review_id="", author="", recomendation="", stars=0.0, content="", pros=[], cons=[], likes=0, dislikes=0, publish_date="", purchase_date=""):
         self.review_id = review_id
         self.author = author
-        self.recommendation = recomendation
+        self.recomendation = recomendation
         self.stars = stars
         self.content = content
         self.pros = pros
@@ -29,11 +27,16 @@ class Review:
         self.dislikes = dislikes
         self.publish_date = publish_date
         self.purchase_date = purchase_date
+    
     def __str__(self):
-        return "\n".join([f"(feature): {getattr(self,feature)}" for feature in self.review_schema.keys()]) 
-
+        return "\n".join([f"{feature}: {getattr(self,feature)}"  for feature in self.review_schema.keys()])
+    
     def to_dict(self):
-        return {feature: getattr(self,feature) for feature in self.review_schema.keys()}
+        return {feature: getattr(self,feature)  for feature in self.review_schema.keys()}
+    
+    def from_dict(self, review_dict):
+        for key in self.review_schema.keys():
+              setattr(self, key, review_dict[key])
     
     def extract_features(self, review):
         for key, value in self.review_schema.items():
